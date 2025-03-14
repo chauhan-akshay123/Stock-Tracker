@@ -18,4 +18,4 @@ async function fetchAllCoins(){
     }
 }
 
-modul.exports = { fetchAllCoins };
+module.exports = { fetchAllCoins };
