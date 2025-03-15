@@ -12,14 +12,14 @@ const register = async (req, res) => {
 
       res.status(201).json({ message: "User registered successfully." });
     } catch(error){
-        res.status(500).json({ message: "Server Error", error });
+        res.status(500).json({ message: "Server Error", error: error.message });
     }
 };
 
 const login = async (req, res) => {
     try{
       const { email, password } = req.body;
-      const user = await User.FindOne({ email });
+      const user = await User.findOne({ email });
       if(!user) return res.status(400).json({ message: "Invalid Credentials: Username not found" });
       
       const isMatch = await bcrypt.compare(password, user.password);
@@ -28,7 +28,7 @@ const login = async (req, res) => {
       const token = user.generateAuthToken();
       res.status(200).json({ message: "Login Successful", token });
     } catch(error){
-        res.status(500).json({ message: "Server Error", error });
+        res.status(500).json({ message: "Server Error", error: error.message });
     }
 };
  

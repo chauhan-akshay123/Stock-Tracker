@@ -3,22 +3,25 @@ const Subscription = require("../models/Subscription");
 
 // Subscribe to a coin
 const subscribeToCoin = async (req, res) => {
-    try{
-      const user = await User.findById(req.user.id);
-      const { coinId } = req.params;
-      
-      const existingSubscription = await Subscription.findOne({ user: user._id, coinId });
-      if(existingSubscription) {
-         return res.status(400).json({ message: "Already subscribed to this coin" });
-      }
-      
-      const newSubscription = new Subscription({ user: user._id, coinId });
-      await newSubscription.save();
+    try {
+        const user = await User.findById(req.user.id);
+        const { coinId } = req.params; 
 
-      user.subscriptions.push(newSubscription._id);
+        // Check if the user is already subscribed
+        const existingSubscription = await Subscription.findOne({ user: user._id, coinId });
+        if (existingSubscription) {
+            return res.status(400).json({ message: "Already subscribed to this coin" });
+        }
 
-      res.json({ message: `Subscribed to ${coinId}`, subscriptions: user.subscriptions });
-    } catch(error){
+        // Create and save new subscription
+        const newSubscription = new Subscription({ user: user._id, coinId });
+        await newSubscription.save();
+
+        user.subscriptions.push(newSubscription._id);
+        await user.save(); // Save the updated user document
+
+        res.json({ message: `Subscribed to ${coinId}`, subscriptions: user.subscriptions });
+    } catch (error) {
         console.error("Error subscribing:", error);
         res.status(500).json({ error: "Subscription failed" });
     }
@@ -26,32 +29,31 @@ const subscribeToCoin = async (req, res) => {
 
 // Unsubscribe from a coin
 const unsubscribeFromCoin = async (req, res) => {
-    try{
-      const user = await User.findById(req.user.id);
-      const { coinId } = req.params;
+    try {
+        const user = await User.findById(req.user.id);
+        const { coinId } = req.params; 
 
-      const subscription = await Subscription.findOneAndDelete({ user: user._id, coinId });
-      if(!subscription) {
-        return res.status(400).json({ message: "Subscription not found" }); 
-      }
+        const subscription = await Subscription.findOneAndDelete({ user: user._id, coinId });
+        if (!subscription) {
+            return res.status(400).json({ message: "Not subscribed to this coin" });
+        }
 
-      user.subscriptions = user.subscriptions.filter(subId => subId.toString() !== subscription._id.toString());
-      await user.save();
+        // Remove subscription ID from user's array
+        user.subscriptions = user.subscriptions.filter(sub => sub.toString() !== subscription._id.toString());
+        await user.save();
 
-      res.json({ message: `Unsubscribed from ${coinId}`, subscriptions: user.subscriptions });
-    } catch(error){
+        res.json({ message: `Unsubscribed from ${coinId}`, subscriptions: user.subscriptions });
+    } catch (error) {
         console.error("Error unsubscribing:", error);
-        res.status(500).json({ error: "Unsubscription Failed" });
+        res.status(500).json({ error: "Unsubscription failed" });
     }
 };
+
 
 // Get user subscriptions
 const getUserSubscriptions = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).populate({
-            path: "subscriptions",
-            populate: { path: "coinId" } // Populate coinId details if needed
-        });
+        const user = await User.findById(req.user.id).populate("subscriptions"); // No need to populate coinId
 
         res.json(user.subscriptions);
     } catch (error) {

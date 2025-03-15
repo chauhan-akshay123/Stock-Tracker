@@ -1,12 +1,9 @@
 const mongoose = require("mongoose");
 
-const SubscriptionSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  coinId: { type: mongoose.Schema.Types.ObjectId, ref: "Coin", required: true }
-},
-{
-    timestamps: true
-}
-);
+const subscriptionSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    coinId: { type: String, required: true }, // Store coin ID as a string
+});
 
-module.exports = mongoose.model("Subscription", SubscriptionSchema);
+const Subscription = mongoose.model("Subscription", subscriptionSchema);
+module.exports = Subscription;

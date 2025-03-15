@@ -5,7 +5,7 @@
  const router = express.Router();
 
  // Subscribe to a coin
- router.post("/subscriptions/:coinId", authMiddleware, subscribeToCoin);
+ router.post("/subscribe/:coinId", authMiddleware, subscribeToCoin);
 
  // Unsubscribe from a coin
  router.post("/unsubscribe/:coinId", authMiddleware, unsubscribeFromCoin);
