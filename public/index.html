@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Coin Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Real-Time Coin Tracker</h1>
+
+        <!-- Register Form -->
+        <div id="register-section">
+            <h2>Register</h2>
+            <input type="text" id="register-name" placeholder="Full Name">
+            <input type="email" id="register-email" placeholder="Email">
+            <input type="password" id="register-password" placeholder="Password">
+            <button onclick="register()">Register</button>
+            <p id="register-error" class="error"></p>
+            <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-section" style="display: none;">
+            <h2>Login</h2>
+            <input type="email" id="login-email" placeholder="Email">
+            <input type="password" id="login-password" placeholder="Password">
+            <button onclick="login()">Login</button>
+            <p id="login-error" class="error"></p>
+            <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+        </div>
+
+        <!-- Main Content (Hidden until login) -->
+        <div id="content" style="display: none;">
+            <h2>Available Coins</h2>
+            <div id="coins-list"></div>
+
+            <h2>Subscribed Coins</h2>
+            <div id="subscribed-coins"></div>
+
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
