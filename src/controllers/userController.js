@@ -53,13 +53,17 @@ const unsubscribeFromCoin = async (req, res) => {
 // Get user subscriptions
 const getUserSubscriptions = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).populate("subscriptions"); // No need to populate coinId
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ error: "User not found" });
 
-        res.json(user.subscriptions);
+        const subscriptions = await Subscription.find({ user: user._id }).select("coinId -_id"); 
+        
+        res.json({ subscriptions: subscriptions.map(sub => sub.coinId) }); 
     } catch (error) {
         console.error("Error fetching subscriptions:", error);
         res.status(500).json({ error: "Failed to fetch subscriptions" });
     }
 };
+
 
 module.exports = { subscribeToCoin, unsubscribeFromCoin, getUserSubscriptions };
