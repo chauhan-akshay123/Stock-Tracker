@@ -18,4 +18,17 @@ async function fetchAllCoins(){
     }
 }
 
-module.exports = { fetchAllCoins };
+async function fetchCoinById(id) {
+  try {
+    const response = await axiosInstance.get(`/coins/${id}`, {
+      params: {
+        localization: false,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to fetch a coin by ID");
+  }
+}
+
+module.exports = { fetchAllCoins, fetchCoinById };

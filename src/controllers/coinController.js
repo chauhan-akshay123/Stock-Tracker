@@ -1,4 +1,4 @@
-const { fetchAllCoins } = require("../services/coinService");
+const { fetchAllCoins, fetchCoinById } = require("../services/coinService");
 
 async function getAllCoins(req, res) {
     try{
@@ -9,4 +9,14 @@ async function getAllCoins(req, res) {
     }
 }
 
-module.exports = { getAllCoins };
+const getCoinById = async (req, res) => {
+    try{
+      const { id } = req.params;
+      const coin = await fetchCoinById(id);
+      res.status(200).json({ success: true, data: coin });
+    } catch(error){
+        res.status(500).json({ success: false, message: error.message }); 
+    }
+}
+
+module.exports = { getAllCoins, getCoinById };
