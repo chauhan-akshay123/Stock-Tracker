@@ -3,11 +3,15 @@ const cors = require("cors");
 
 const coinRoutes = require("./routes/coinRoutes");
 const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// Auth Routes
+app.use("/api/auth", authRoutes);
 
 // API Routes
 app.use("/api/coins", coinRoutes);
